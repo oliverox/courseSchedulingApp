@@ -1,0 +1,25 @@
+{
+    "courselist": {
+        "course": [{
+            "id": 0,
+            "subject": "Computer Science",
+            "academy": "Science",
+            "capacity": 5
+        }, {
+            "id": 1,
+            "subject": "English",
+            "academy": "Language",
+            "capacity": 5
+        }, {
+            "id": 2,
+            "subject": "Spanish",
+            "academy": "Language",
+            "capacity": 5
+        }, {
+            "id": 3,
+            "subject": "Mathematics",
+            "academy": "Science",
+            "capacity": 5
+        }]
+    }
+}

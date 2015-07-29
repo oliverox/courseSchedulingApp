@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+<!-- Define the model -->
+    <solutionClass>org.coursescheduling.domain.CourseSchedulingSolution</solutionClass>
+    <entityClass>org.coursescheduling.domain.StudentEntity</entityClass>
+
+<!-- Define the score function -->
+    <scoreDirectorFactory>
+        <scoreDefinitionType>HARD_SOFT</scoreDefinitionType>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+        <scoreDrl>org/coursescheduling/solver/courseSchedulingScoreRules.drl</scoreDrl>
+    </scoreDirectorFactory>
+
+<!-- Configure the optimization algorithm(s) -->
+    <termination>
+        <secondsSpentLimit>1</secondsSpentLimit>
+<!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
+    </termination>
+    <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+    </constructionHeuristic>
+    <localSearch>
+        <changeMoveSelector>
+            <entitySelector>
+                <cacheType>PHASE</cacheType>
+                <selectionOrder>SORTED</selectionOrder>
+                <sorterManner>DECREASING_DIFFICULTY</sorterManner>
+            </entitySelector>
+        </changeMoveSelector>
+        <acceptor>
+            <entityTabuSize>7</entityTabuSize>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+    </localSearch>
+</solver>

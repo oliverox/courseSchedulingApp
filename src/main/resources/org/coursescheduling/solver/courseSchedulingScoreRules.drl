@@ -1,0 +1,40 @@
+package org.coursescheduling.solver;
+    dialect "java"
+
+import java.util.ArrayList
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
+
+import org.coursescheduling.domain.CourseSchedulingSolution;
+import org.coursescheduling.domain.StudentEntity;
+import org.coursescheduling.domain.CourseEntity;
+
+global HardSoftScoreHolder scoreHolder;
+
+// ############################################################################
+// Hard constraints
+// ############################################################################
+
+rule "place into course by subject requested"
+    when
+        $count : ArrayList(size > 0)
+                    from collect( StudentEntity(assigned != null, requested != assigned.getSubject()) )
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -$count.size());
+end
+
+rule "don't exceed course max capacity"
+	when
+		$course : CourseEntity($capacity : capacity)
+		$counta : ArrayList( size > $capacity )
+				  from collect( StudentEntity(assigned != null, assigned == $course) )
+	then
+		scoreHolder.addHardConstraintMatch(kcontext, -($counta.size() - $course.getCapacity()));
+end
+
+rule "assign courses with higher priority"
+    when
+        $student1 : StudentEntity(assigned != null, requested == assigned.getSubject())
+        $student2 : StudentEntity(assigned != null, name == $student1.getName(), priority > $student1.getPriority(), requested != assigned.getSubject())
+    then
+        scoreHolder.addSoftConstraintMatch(kcontext, -1);
+end

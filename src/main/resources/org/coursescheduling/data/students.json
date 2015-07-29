@@ -1,0 +1,53 @@
+{
+    "studentlist": {
+        "student": [{
+            "id": 0,
+            "name": "Celedon",
+            "priority": 1,
+            "academy": "Science",
+            "requested": "Mathematics"
+        }, {
+            "id": 1,
+            "name": "Garcia",
+            "priority": 2,
+            "academy": "Language",
+            "requested": "English"
+        }, {
+            "id": 2,
+            "name": "Diaz",
+            "priority": 1,
+            "academy": "Science",
+            "requested": "Computer Science"
+        }, {
+            "id": 3,
+            "name": "Guerrero",
+            "priority": 4,
+            "academy": "Language",
+            "requested": "Spanish"
+        }, {
+            "id": 4,
+            "name": "Celedon",
+            "priority": 4,
+            "academy": "Language",
+            "requested": "Spanish"
+        }, {
+            "id": 5,
+            "name": "Garcia",
+            "priority": 3,
+            "academy": "Language",
+            "requested": "Spanish"
+        }, {
+            "id": 6,
+            "name": "Diaz",
+            "priority": 5,
+            "academy": "Language",
+            "requested": "English"
+        }, {
+            "id": 7,
+            "name": "Guerrero",
+            "priority": 1,
+            "academy": "Language",
+            "requested": "English"
+        }]
+    }
+}
