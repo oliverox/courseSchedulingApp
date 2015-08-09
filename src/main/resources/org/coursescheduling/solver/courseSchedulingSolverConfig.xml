@@ -13,8 +13,8 @@
 
 <!-- Configure the optimization algorithm(s) -->
     <termination>
-        <secondsSpentLimit>1</secondsSpentLimit>
-<!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
+        <secondsSpentLimit>180</secondsSpentLimit>
+        <!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>

@@ -16,25 +16,49 @@ global HardSoftScoreHolder scoreHolder;
 
 rule "place into course by subject requested"
     when
-        $count : ArrayList(size > 0)
-                    from collect( StudentEntity(assigned != null, requested != assigned.getSubject()) )
+        $arr1 : ArrayList(size > 0)
+            from collect(StudentEntity(assignedCourse != null, requestedCourseId != assignedCourse.getCourseId()))
     then
-        scoreHolder.addHardConstraintMatch(kcontext, -$count.size());
+        scoreHolder.addHardConstraintMatch(kcontext, -$arr1.size());
+end
+
+rule "place by academy"
+    when
+        $arr2 : ArrayList(size > 0)
+            from collect(StudentEntity(assignedCourse != null, requestedCourseId == assignedCourse.getCourseId(), assignedCourse.getAcademy() != "", nextYearAcademy != assignedCourse.getAcademy()))
+        then
+            scoreHolder.addSoftConstraintMatch(kcontext, -$arr2.size());
 end
 
 rule "don't exceed course max capacity"
 	when
 		$course : CourseEntity($capacity : capacity)
-		$counta : ArrayList( size > $capacity )
-				  from collect( StudentEntity(assigned != null, assigned == $course) )
+		$arr3 : ArrayList(size > $capacity)
+            from collect(StudentEntity(assignedCourse != null, assignedCourse.getId() == $course.getId(), requestedCourseId == assignedCourse.getCourseId(), assignedCourse.getIndex() == $course.getIndex()))
 	then
-		scoreHolder.addHardConstraintMatch(kcontext, -($counta.size() - $course.getCapacity()));
+		scoreHolder.addSoftConstraintMatch(kcontext, $capacity - $arr3.size());
 end
 
-rule "assign courses with higher priority"
+rule "don't place into courses at the same periods"
     when
-        $student1 : StudentEntity(assigned != null, requested == assigned.getSubject())
-        $student2 : StudentEntity(assigned != null, name == $student1.getName(), priority > $student1.getPriority(), requested != assigned.getSubject())
+        $course : CourseEntity($period : period)
+        $student : StudentEntity(assignedCourse != null)
+        $arr4 : ArrayList(size > 1)
+            from collect(StudentEntity(
+                assignedCourse != null,
+                id == $student.getId(),
+                assignedCourse.getId() == $course.getId(),
+                requestedCourseId == assignedCourse.getCourseId(),
+                assignedCourse.getIndex() == $course.getIndex(),
+                assignedCourse.getPeriod() == $period))
     then
-        scoreHolder.addSoftConstraintMatch(kcontext, -1);
+        scoreHolder.addHardConstraintMatch(kcontext, 1 - $arr4.size());
 end
+
+// rule "assign courses with higher priority"
+//     when
+//         $student1 : StudentEntity(assigned != null, requested == assigned.getSubject())
+//         $student2 : StudentEntity(assigned != null, name == $student1.getName(), priority > $student1.getPriority(), requested != assigned.getSubject())
+//     then
+//         scoreHolder.addSoftConstraintMatch(kcontext, -1);
+// end

@@ -6,48 +6,67 @@ import org.coursescheduling.domain.solver.CourseStrengthComparator;
 
 @PlanningEntity(difficultyComparatorClass = StudentDifficultyComparator.class)
 public class StudentEntity {
-	private long id;
-	private String name;
-	private String academy;
-	private String requested;
+	private int id;
+	private String lastName;
+	private String firstName;
+	private String nextYearGrade;
+	private String nextYearAcademy;
+	private String requestedCourseId;
 	private Integer priority;
 	// Planning variables: changes during planning, between score calculations.
-	private CourseEntity assigned;
+	private CourseEntity assignedCourse;
 
 
 	public StudentEntity() {
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
-                this.id = id;
+	public void setId(int id) {
+        this.id = id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public String getName() {
-		return name;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setAcademy(String academy) {
-		this.academy = academy;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getAcademy() {
-		return academy;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setRequested(String courseName) {
-		this.requested = courseName;
+	public String getNextYearGrade() {
+		return nextYearGrade;
 	}
 
-	public String getRequested() {
-		return requested;
+	public void setNextYearGrade(String nextYearGrade) {
+		this.nextYearGrade = nextYearGrade;
+	}
+
+
+	public void setNextYearAcademy(String nextYearAcademy) {
+		this.nextYearAcademy = nextYearAcademy;
+	}
+
+	public String getNextYearAcademy() {
+		return nextYearAcademy;
+	}
+
+	public void setRequestedCourseId(String courseId) {
+		this.requestedCourseId = courseId;
+	}
+
+	public String getRequestedCourseId() {
+		return requestedCourseId;
 	}
 
 	public void setPriority(Integer priority) {
@@ -59,17 +78,22 @@ public class StudentEntity {
 	}
 
 	@PlanningVariable(valueRangeProviderRefs = {"courseRange"}, strengthComparatorClass = CourseStrengthComparator.class)
-	public CourseEntity getAssigned() {
-		return assigned;
+	public CourseEntity getAssignedCourse() {
+		return assignedCourse;
 	}
 
-	public void setAssigned(CourseEntity course) {
-		this.assigned = course;
+	public void setAssignedCourse(CourseEntity course) {
+		this.assignedCourse = course;
 	}
 
 	@Override
 	public String toString() {
-		return "Student: " + name + ", requested: " + requested; // + ", assigned: " + assigned.toString();
+		if (assignedCourse == null) {
+			return "Student: " + id + " - " + lastName + " " + firstName + ", requestedCourseId: " + requestedCourseId; // + ", assigned: " + assigned.toString();
+		}
+		else {
+			return "Student: " + id + " - " + lastName + " " + firstName + ", requestedCourseId: " + requestedCourseId + ", assignedCourse: " + assignedCourse.toString();
+		}
 	}
 
 }

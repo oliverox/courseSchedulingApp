@@ -10,8 +10,8 @@ public class StudentDifficultyComparator implements Comparator<StudentEntity>, S
 
     public int compare(StudentEntity a, StudentEntity b) {
         return new CompareToBuilder()
-                .append(b.getPriority(), a.getPriority())
-                .append(a.getName(), b.getName())
+                // .append(a.getPriority(), b.getPriority())
+                .append(a.getLastName(), b.getLastName())
                 .toComparison();
     }
 

@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.File;
+import java.util.Set;
+import java.util.HashSet;
 
 import com.thoughtworks.xstream.XStream;
 //import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -40,6 +42,20 @@ public class CourseSchedulingApp {
 		return word;
 	}
 
+	public static boolean duplicates(List<CourseEntity> courseList) {
+  		Set<String> uniqueSet = new HashSet<String>();
+		String uniqueId;
+  		for (CourseEntity course : courseList) {
+			uniqueId = course.getCourseId() + "--" + course.getIndex() + "--" + course.getPeriod();
+    		if (uniqueSet.contains(uniqueId)) {
+				System.out.println("Duplicates encountered for: " + uniqueId);
+				return true;
+			}
+    		uniqueSet.add(uniqueId);
+  		}
+  		return false;
+	}
+
 	public static void main(String[] args) {
 		try {
 			File outfile = new File(CourseSchedulingApp.class.getResource("/org/coursescheduling/data/output.json").toURI());
@@ -48,6 +64,7 @@ public class CourseSchedulingApp {
 			}
 			PrintWriter printWriter = new PrintWriter(new FileWriter(outfile));
 			XStream xstream = new XStream(new JettisonMappedXmlDriver());
+			xstream.setMode(XStream.NO_REFERENCES);
 			xstream.alias("course", CourseEntity.class);
 			xstream.alias("student", StudentEntity.class);
 			xstream.alias("CourseSchedulingSolution", CourseSchedulingSolution.class);
@@ -65,9 +82,45 @@ public class CourseSchedulingApp {
 			// Display the result
 			System.out.println("\nSolved courseSchedulingSolution:\n" + toDisplayString(solvedSolution));
 			System.out.println("BEST SCORE: " + solvedSolution.getScore());
-			String json = xstream.toXML(solvedSolution);
-			System.out.println("JSON: " + json);
-			printWriter.println(json);
+
+			System.out.println("\n=============================\nCapacity check");
+
+			List<StudentEntity> studentList = solvedSolution.getStudentList();
+			List<CourseEntity> courseList = solvedSolution.getCourseList();
+			int totalCapacity = 0;
+            int cap = 0;
+			int overCap = 0;
+			int wrongPlacement = 0;
+			for (StudentEntity student : studentList) {
+				if (!student.getRequestedCourseId().equals(student.getAssignedCourse().getCourseId())) {
+					wrongPlacement = wrongPlacement + 1;
+				}
+				for (CourseEntity course : courseList) {
+					if (student.getAssignedCourse().getId() == course.getId()) {
+                        cap = course.getCapacityUsed();
+						course.setCapacityUsed(cap + 1);
+						break;
+					}
+				}
+			}
+
+			for (CourseEntity course : courseList) {
+				System.out.println(course.getId() + "\t" + course.getCourseId() + "--" + course.getIndex() + "\t" + course.getCapacity() + "\t" + course.getCapacityUsed());
+				totalCapacity = totalCapacity + course.getCapacityUsed();
+				if (course.getCapacityUsed() > course.getCapacity()) {
+					overCap = overCap + 1;
+				}
+			}
+
+			System.out.println("TOTAL STUDENT REQUESTS PLACED        : " + studentList.size());
+			System.out.println("TOTAL STUDENT REQUESTS WRONGLY PLACED: " + wrongPlacement);
+			System.out.println("TOTAL CAPACITY USED                  : " + totalCapacity);
+			System.out.println("TOTAL COURSES OVER CAPACITY          : " + overCap);
+
+			// String json = xstream.toXML(solvedSolution.getStudentList());
+			System.out.println("JSON output file location: " + CourseSchedulingApp.class.getResource("/org/coursescheduling/data/output.json").toURI());
+			printWriter.println(xstream.toXML(solvedSolution.getStudentList()));
+
 		} catch (IOException ex) {
 			Logger.getLogger(CourseSchedulingApp.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (URISyntaxException ex) {
@@ -173,30 +226,37 @@ public class CourseSchedulingApp {
 	}
 	*/
 	private static String toDisplayString(CourseSchedulingSolution solution) {
-		String output = spacer("Sid", COLUMN_WIDTH) + "\t" +
-						spacer("Name", COLUMN_WIDTH) + "\t" +
+		String output = spacer("StudentId", COLUMN_WIDTH) + "\t" +
+						spacer("LastName", COLUMN_WIDTH) + "\t" +
+						spacer("FirstName", COLUMN_WIDTH) + "\t" +
 						spacer("Academy", COLUMN_WIDTH) + "\t" +
-						spacer("Priority", COLUMN_WIDTH) + "\t" +
-						spacer("Requested", COLUMN_WIDTH) + "\t" +
-						spacer("Assigned", COLUMN_WIDTH) + "\t" +
-						spacer("OK?", COLUMN_WIDTH) + "\n" +
-						spacer("=============\t", COLUMN_WIDTH) +
-						spacer("=============\t", COLUMN_WIDTH) +
-						spacer("=============\t", COLUMN_WIDTH) +
-						spacer("=============\t", COLUMN_WIDTH) +
-						spacer("=============\t", COLUMN_WIDTH) +
-						spacer("=============\t", COLUMN_WIDTH) +
-						spacer("=============", COLUMN_WIDTH) + "\n";
+						spacer("RequestedCourseId", COLUMN_WIDTH) + "\t" +
+						spacer("AssignedCourseId", COLUMN_WIDTH) + "\t" +
+						spacer("MATCH?", COLUMN_WIDTH) + "\t" +
+						spacer("AssignedCourseName", COLUMN_WIDTH) + "\t" +
+						spacer("AssignedCourseAcademy", COLUMN_WIDTH) + "\t" +
+						spacer("AssignedCoursePeriod", COLUMN_WIDTH) + "\t" +
+						spacer("AssignedCourseCapacity", COLUMN_WIDTH) + "\n";
 
 		List<StudentEntity> studentList = solution.getStudentList();
         for (StudentEntity student : studentList) {
             output += 	spacer(String.valueOf(student.getId()), COLUMN_WIDTH) + "\t" +
-                    	spacer(student.getName(), COLUMN_WIDTH) + "\t" +
-                    	spacer(student.getAcademy(), COLUMN_WIDTH) + "\t" +
-						spacer(student.getPriority().toString(), COLUMN_WIDTH) + "\t" +
-                    	spacer(student.getRequested(), COLUMN_WIDTH) + "\t" +
-                    	spacer(student.getAssigned().getSubject(), COLUMN_WIDTH) + "\t" +
-                    	spacer(String.valueOf(student.getRequested().equals(student.getAssigned().getSubject())), COLUMN_WIDTH) + "\n";
+                    	spacer(student.getLastName(), COLUMN_WIDTH) + "\t" +
+						spacer(student.getFirstName(), COLUMN_WIDTH) + "\t" +
+                    	spacer(student.getNextYearAcademy(), COLUMN_WIDTH) + "\t" +
+                    	spacer(student.getRequestedCourseId(), COLUMN_WIDTH) + "\t";
+			if (student.getAssignedCourse() != null) {
+				output +=	spacer(student.getAssignedCourse().getCourseId() + "--" + Integer.toString(student.getAssignedCourse().getIndex()), COLUMN_WIDTH) + "\t" +
+							spacer(Boolean.toString(student.getAssignedCourse().getCourseId().equals(student.getRequestedCourseId())), COLUMN_WIDTH) + "\t" +
+							spacer(student.getAssignedCourse().getCourseName(), COLUMN_WIDTH) + "\t" +
+							spacer(student.getAssignedCourse().getAcademy(), COLUMN_WIDTH) + "\t" +
+							spacer(Integer.toString(student.getAssignedCourse().getPeriod()), COLUMN_WIDTH) + "\t" +
+							spacer(Integer.toString(student.getAssignedCourse().getCapacity()), COLUMN_WIDTH) + "\n";
+			}
+			else {
+				output += "\n";
+			}
+                    	// spacer(String.valueOf(student.getRequestedCourseId().equals(student.getAssignedCourse().getId())), COLUMN_WIDTH) + "\n";
         }
 
 		return output;

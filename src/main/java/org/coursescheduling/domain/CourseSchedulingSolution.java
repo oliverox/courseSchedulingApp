@@ -68,7 +68,6 @@ public class CourseSchedulingSolution implements Solution<HardSoftScore>, Serial
 	}
 
 	public void setScore(HardSoftScore score) {
-		// System.out.println("Setting new score: " + score.toString());
 		this.score = score;
 	}
 
