@@ -109,39 +109,6 @@ public class CourseSchedulingApp {
 
 			System.out.println("\n**** Listing students by courses ****");
 			listStudentsByCourses(solvedSolution);
-			// System.out.println("\n=============================\nCapacity check");
-			//
-			// List<StudentEntity> studentList = solvedSolution.getStudentList();
-			// List<CourseEntity> courseList = solvedSolution.getCourseList();
-			// int totalCapacity = 0;
-            // int cap = 0;
-			// int overCap = 0;
-			// int wrongPlacement = 0;
-			// for (StudentEntity student : studentList) {
-			// 	if (!student.getRequestedCourseId().equals(student.getAssignedCourse().getCourseId())) {
-			// 		wrongPlacement = wrongPlacement + 1;
-			// 	}
-			// 	for (CourseEntity course : courseList) {
-			// 		if (student.getAssignedCourse().getId() == course.getId()) {
-            //             cap = course.getCapacityUsed();
-			// 			course.setCapacityUsed(cap + 1);
-			// 			break;
-			// 		}
-			// 	}
-			// }
-			//
-			// for (CourseEntity course : courseList) {
-			// 	System.out.println(course.getId() + "\t" + course.getCourseId() + "--" + course.getIndex() + "\t" + course.getCapacity() + "\t" + course.getCapacityUsed());
-			// 	totalCapacity = totalCapacity + course.getCapacityUsed();
-			// 	if (course.getCapacityUsed() > course.getCapacity()) {
-			// 		overCap = overCap + 1;
-			// 	}
-			// }
-			//
-			// System.out.println("TOTAL STUDENT REQUESTS PLACED        : " + studentList.size());
-			// System.out.println("TOTAL STUDENT REQUESTS WRONGLY PLACED: " + wrongPlacement);
-			// System.out.println("TOTAL CAPACITY USED                  : " + totalCapacity);
-			// System.out.println("TOTAL COURSES OVER CAPACITY          : " + overCap);
 
 		} catch (IOException ex) {
 			Logger.getLogger(CourseSchedulingApp.class.getName()).log(Level.SEVERE, null, ex);
