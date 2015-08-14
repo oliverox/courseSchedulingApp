@@ -7,6 +7,7 @@ import org.coursescheduling.domain.solver.CourseStrengthComparator;
 @PlanningEntity(difficultyComparatorClass = StudentDifficultyComparator.class)
 public class StudentEntity {
 	private int id;
+	private int studentId;
 	private String lastName;
 	private String firstName;
 	private String nextYearGrade;
@@ -26,6 +27,14 @@ public class StudentEntity {
 
 	public void setId(int id) {
         this.id = id;
+	}
+
+	public int getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
 	}
 
 	public void setLastName(String lastName) {
@@ -89,10 +98,10 @@ public class StudentEntity {
 	@Override
 	public String toString() {
 		if (assignedCourse == null) {
-			return "Student: " + id + " - " + lastName + " " + firstName + ", requestedCourseId: " + requestedCourseId; // + ", assigned: " + assigned.toString();
+			return "Student: " + id + ", " + studentId + " - " + lastName + " " + firstName + ", requestedCourseId: " + requestedCourseId; // + ", assigned: " + assigned.toString();
 		}
 		else {
-			return "Student: " + id + " - " + lastName + " " + firstName + ", requestedCourseId: " + requestedCourseId + ", assignedCourse: " + assignedCourse.toString();
+			return "Student: " + id + ", " + studentId + " - " + lastName + " " + firstName + ", requestedCourseId: " + requestedCourseId + ", assignedCourse: " + assignedCourse.toString();
 		}
 	}
 

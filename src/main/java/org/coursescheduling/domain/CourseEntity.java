@@ -1,10 +1,13 @@
 package org.coursescheduling.domain;
 
+import java.util.ArrayList;
+
 public class CourseEntity {
 	private int id;
 	private String courseId;
 	private int index;
 	private int period;
+	private String cycleDays;
 	private String courseName;
 	private String staffName;
 	private int staffId;
@@ -12,6 +15,7 @@ public class CourseEntity {
 	private String academy;
 	private int capacity;
 	private int capacityUsed;
+	private ArrayList<StudentEntity> students;
 
 	public CourseEntity() {
 	}
@@ -38,6 +42,14 @@ public class CourseEntity {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	public String getCycleDays() {
+		return cycleDays;
+	}
+
+	public void setCycleDays(String cycleDays) {
+		this.cycleDays = cycleDays;
 	}
 
 	public void setCourseName(String courseName) {
@@ -104,9 +116,28 @@ public class CourseEntity {
 		return capacityUsed;
 	}
 
+	public void addStudent(StudentEntity student) {
+		if (this.students == null) {
+			this.students = new ArrayList<StudentEntity>();
+		}
+		this.students.add(student);
+	}
+
+	public ArrayList<StudentEntity> getStudents() {
+		return students;
+	}
+
+	public boolean periodMatch(CourseEntity otherCourse) {
+		boolean match = false;
+		if (period == otherCourse.getPeriod()) {
+			match = true;
+		}
+		return match;
+	}
+
 	@Override
 	public String toString() {
-		return "Course: [" + id + ", " + courseId + "--" + index + ", " + courseName + ", period: " + period + ", staffName: " + staffName + ", capacity: " + capacity + ", academy: " + academy + "]";
+		return "Course: [" + id + ", " + courseId + "--" + index + ", " + courseName + ", period: " + period + ", cycleDays: " + cycleDays + ", staffName: " + staffName + ", capacity: " + capacity + ", academy: " + academy + "]";
 	}
 
 }
