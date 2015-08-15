@@ -137,7 +137,7 @@ public class CourseSchedulingApp {
         try {
 			Gson gson = new Gson();
 			Type collectionType = new TypeToken<ArrayList<StudentEntity>>(){}.getType();
-			studentlist = gson.fromJson(readFile("/org/coursescheduling/data/students-2.json"), collectionType);
+			studentlist = gson.fromJson(readFile("/org/coursescheduling/data/students_orig.json"), collectionType);
 			for (StudentEntity student : studentlist) {
 				System.out.println("+++++++++ " + student.toString() + "\n");
 			}
