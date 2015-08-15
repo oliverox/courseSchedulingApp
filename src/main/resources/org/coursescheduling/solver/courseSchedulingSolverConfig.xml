@@ -13,7 +13,7 @@
 
 <!-- Configure the optimization algorithm(s) -->
     <termination>
-        <minutesSpentLimit>15</minutesSpentLimit>
+        <minutesSpentLimit>1</minutesSpentLimit>
         <!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
     </termination>
     <constructionHeuristic>

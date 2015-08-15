@@ -98,7 +98,7 @@ public class CourseSchedulingApp {
 			System.out.println("\nSolved courseSchedulingSolution.");
 			System.out.println("BEST SCORE: " + solvedSolution.getScore() + "\n");
 
-			System.out.println("JSON output file location: " + CourseSchedulingApp.class.getResource("/org/coursescheduling/data/output.json").toURI());
+			System.out.println("JSON output " + CourseSchedulingApp.class.getResource("/org/coursescheduling/data/output.json").toURI());
 			Gson gson = new Gson();
 			printWriter.println(gson.toJson(solvedSolution.getStudentList()));
 			printWriter.flush();
@@ -165,12 +165,18 @@ public class CourseSchedulingApp {
 		return false;
 	}
 
-	private static void listStudentsByCourses(CourseSchedulingSolution solution) {
-		String output = spacer(" ", CW);
+	private static void listStudentsByCourses(CourseSchedulingSolution solution) throws IOException, URISyntaxException {
+		File csvOutfile = new File(CourseSchedulingApp.class.getResource("/org/coursescheduling/data/studentsbycourses.csv").toURI());
+		if (!csvOutfile.exists()) {
+			csvOutfile.createNewFile();
+		}
+		PrintWriter printWriter = new PrintWriter(new FileWriter(csvOutfile));
+
+		String output = "-";
 		int maxSize = 0;
 
 		for (CourseEntity course : solution.getCourseList()) {
-			output = output + spacer(course.getId() + " - " + course.getCourseId() + "--" + course.getIndex(), CW);
+			output = output + "," + course.getId() + " - " + course.getCourseId() + "--" + course.getIndex();
 			for (StudentEntity student : solution.getStudentList()) {
 				if (student.getAssignedCourse().getId() == course.getId()) {
 					course.addStudent(student);
@@ -181,36 +187,48 @@ public class CourseSchedulingApp {
 			}
 		}
 		System.out.println(output);
+		printWriter.println(output);
 
 		for (int i=0; i<maxSize; i++) {
-			output = spacer(Integer.toString(i + 1), CW);
+			output = Integer.toString(i + 1);
 			for (CourseEntity course : solution.getCourseList()) {
 				if ((course.getStudents() == null) || (i > course.getStudents().size() - 1)) {
-					output = output + spacer(" ", CW);
+					output = output + "," + "-";
 				}
 				else {
-					output = output + spacer(Integer.toString(course.getStudents().get(i).getStudentId()), CW);
+					output = output + "," + Integer.toString(course.getStudents().get(i).getStudentId());
 				}
 			}
 			System.out.println(output);
+			printWriter.println(output);
 		}
+		System.out.println("\nStudents by courses csv " + CourseSchedulingApp.class.getResource("/org/coursescheduling/data/studentsbycourses.csv").toURI());
+		printWriter.flush();
+		printWriter.close();
 	}
 
-	private static void listStudentsByPeriod(CourseSchedulingSolution solution) {
-		String output = spacer("StudentId", CW) +
-						spacer("StudentName", CW) +
-						spacer("P0", CW) +
-						spacer("P1", CW) +
-						spacer("P2", CW) +
-						spacer("P3", CW) +
-						spacer("P4", CW) +
-						spacer("P5", CW) +
-						spacer("P6", CW) +
-						spacer("P7", CW) +
-						spacer("P8", CW) +
-						spacer("P9", CW) +
-						spacer("Courses Requested", CW);
+	private static void listStudentsByPeriod(CourseSchedulingSolution solution) throws URISyntaxException, IOException {
+		File csvOutfile = new File(CourseSchedulingApp.class.getResource("/org/coursescheduling/data/studentsbyperiod.csv").toURI());
+		if (!csvOutfile.exists()) {
+			csvOutfile.createNewFile();
+		}
+		PrintWriter printWriter = new PrintWriter(new FileWriter(csvOutfile));
+
+		String output = "StudentId, " +
+						"StudentName, " +
+						"P0, " +
+						"P1, " +
+						"P2, " +
+						"P3, " +
+						"P4, " +
+						"P5, " +
+						"P6, " +
+						"P7, " +
+						"P8, " +
+						"P9, " +
+						"Courses Requested";
 		System.out.println(output);
+		printWriter.println(output);
 
 		String[] courseAtPeriod;
 		ArrayList<String> studentsProcessed = new ArrayList<String>();
@@ -232,22 +250,31 @@ public class CourseSchedulingApp {
 						}
 					}
 				}
-				output = 	spacer(Integer.toString(student.getStudentId()), CW) +
-							spacer(student.getLastName() + ", " + student.getFirstName(), CW) +
-							spacer(courseAtPeriod[0], CW) +
-							spacer(courseAtPeriod[1], CW) +
-							spacer(courseAtPeriod[2], CW) +
-							spacer(courseAtPeriod[3], CW) +
-							spacer(courseAtPeriod[4], CW) +
-							spacer(courseAtPeriod[5], CW) +
-							spacer(courseAtPeriod[6], CW) +
-							spacer(courseAtPeriod[7], CW) +
-							spacer(courseAtPeriod[8], CW) +
-							spacer(courseAtPeriod[9], CW) +
-							spacer(coursesRequested.toString(), CW);
+				StringBuilder coursesRequestedStr = new StringBuilder();
+				coursesRequestedStr.append("|");
+				for (String value : coursesRequested) {
+    				coursesRequestedStr.append(value + "|");
+				}
+				output = 	Integer.toString(student.getStudentId()) + ", " +
+							student.getLastName() + " " + student.getFirstName() + ", " +
+							courseAtPeriod[0] + ", " +
+							courseAtPeriod[1] + ", " +
+							courseAtPeriod[2] + ", " +
+							courseAtPeriod[3] + ", " +
+							courseAtPeriod[4] + ", " +
+							courseAtPeriod[5] + ", " +
+							courseAtPeriod[6] + ", " +
+							courseAtPeriod[7] + ", " +
+							courseAtPeriod[8] + ", " +
+							courseAtPeriod[9] + ", " +
+							coursesRequestedStr.toString();
 				System.out.println(output);
+				printWriter.println(output);
 			}
 		}
+		System.out.println("\nStudents by period csv " + CourseSchedulingApp.class.getResource("/org/coursescheduling/data/studentsbyperiod.csv").toURI());
+		printWriter.flush();
+		printWriter.close();
 	}
 
 	private static String toDisplayString(CourseSchedulingSolution solution) {
