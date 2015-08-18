@@ -122,7 +122,7 @@ public class CourseSchedulingApp {
         try {
 			Gson gson = new Gson();
  			Type collectionType = new TypeToken<ArrayList<CourseEntity>>(){}.getType();
- 			courselist = gson.fromJson(readFile("/org/coursescheduling/data/courses.json"), collectionType);
+ 			courselist = gson.fromJson(readFile("/org/coursescheduling/data/courses-complete.json"), collectionType);
 			for (CourseEntity course : courselist) {
 				System.out.println(course.toString() + "\n");
 			}
@@ -137,7 +137,7 @@ public class CourseSchedulingApp {
         try {
 			Gson gson = new Gson();
 			Type collectionType = new TypeToken<ArrayList<StudentEntity>>(){}.getType();
-			studentlist = gson.fromJson(readFile("/org/coursescheduling/data/students_orig.json"), collectionType);
+			studentlist = gson.fromJson(readFile("/org/coursescheduling/data/students-complete.json"), collectionType);
 			for (StudentEntity student : studentlist) {
 				System.out.println("+++++++++ " + student.toString() + "\n");
 			}

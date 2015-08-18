@@ -11,6 +11,8 @@
         <scoreDrl>org/coursescheduling/solver/courseSchedulingScoreRules.drl</scoreDrl>
     </scoreDirectorFactory>
 
+    <environmentMode>PRODUCTION</environmentMode>
+    
 <!-- Configure the optimization algorithm(s) -->
     <termination>
         <minutesSpentLimit>1</minutesSpentLimit>

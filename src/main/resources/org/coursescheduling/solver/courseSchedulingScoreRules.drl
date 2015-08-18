@@ -46,7 +46,7 @@ rule "don't exceed course max capacity"
                 requestedCourseId == assignedCourse.getCourseId(),
                 assignedCourse.getIndex() == $course.getIndex()))
 	then
-		scoreHolder.addSoftConstraintMatch(kcontext, $capacity - $arr3.size());
+		scoreHolder.addHardConstraintMatch(kcontext, $capacity - $arr3.size());
 end
 
 rule "don't place into courses at the same periods"
