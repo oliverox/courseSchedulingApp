@@ -62,6 +62,28 @@ public class CourseSchedulingSolution implements Solution<HardSoftScore>, Serial
 		this.studentList = studentList;
 	}
 
+	public void doInitialStudentAssignment() {
+		for (StudentEntity student : studentList) {
+			if (student.getAssignedCourse() == null) {
+				CourseEntity courseToAssign = null;
+				int numOfPossibleCoursesToAssign = 0;
+				for (CourseEntity course : courseList) {
+					if (student.getRequestedCourseId().equals(course.getCourseId())) {
+						courseToAssign = course;
+						numOfPossibleCoursesToAssign = numOfPossibleCoursesToAssign + 1;
+					}
+				}
+				if (numOfPossibleCoursesToAssign == 1) {
+					student.setAssignedCourse(courseToAssign);
+					student.setLocked(true);
+					System.out.println("Assigned: " + student.toString());
+				}
+				else {
+					student.setLocked(false);
+				}
+			}
+		}
+	}
 
 	public HardSoftScore getScore() {
 		return score;

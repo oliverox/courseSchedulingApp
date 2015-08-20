@@ -18,6 +18,7 @@ rule "place into course by subject requested"
     when
         $arr1 : ArrayList(size > 0)
             from collect(StudentEntity(
+                locked == false,
                 assignedCourse != null,
                 requestedCourseId != assignedCourse.getCourseId()))
     then
@@ -28,6 +29,7 @@ rule "place by academy"
     when
         $arr2 : ArrayList(size > 0)
             from collect(StudentEntity(
+                locked == false,
                 assignedCourse != null,
                 requestedCourseId == assignedCourse.getCourseId(),
                 assignedCourse.getAcademy() != "",
@@ -41,6 +43,7 @@ rule "don't exceed course max capacity"
 		$course : CourseEntity($capacity : capacity)
 		$arr3 : ArrayList(size > $capacity)
             from collect(StudentEntity(
+                locked == false,
                 assignedCourse != null,
                 assignedCourse.getId() == $course.getId(),
                 requestedCourseId == assignedCourse.getCourseId(),
@@ -54,9 +57,11 @@ rule "don't place into courses at the same periods"
         $student : StudentEntity(assignedCourse != null, requestedCourseId == assignedCourse.getCourseId())
         $arr4 : ArrayList(size > 0)
             from collect(StudentEntity(
+                locked == false,
                 id != $student.getId(),
                 studentId == $student.getStudentId(),
                 assignedCourse != null,
+                assignedCourse.getMarkingPeriods() == $student.getAssignedCourse().getMarkingPeriods(),
                 assignedCourse.periodMatch($student.getAssignedCourse())))
     then
         scoreHolder.addHardConstraintMatch(kcontext, -$arr4.size());

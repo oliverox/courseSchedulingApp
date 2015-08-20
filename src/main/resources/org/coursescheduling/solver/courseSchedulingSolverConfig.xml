@@ -12,13 +12,14 @@
     </scoreDirectorFactory>
 
     <environmentMode>PRODUCTION</environmentMode>
-    
+
 <!-- Configure the optimization algorithm(s) -->
     <termination>
-        <minutesSpentLimit>1</minutesSpentLimit>
+        <minutesSpentLimit>2</minutesSpentLimit>
         <!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
     </termination>
     <constructionHeuristic>
+        <!-- <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType> -->
         <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
     </constructionHeuristic>
     <localSearch>
@@ -27,6 +28,7 @@
                 <cacheType>PHASE</cacheType>
                 <selectionOrder>SORTED</selectionOrder>
                 <sorterManner>DECREASING_DIFFICULTY</sorterManner>
+                <filterClass>org.coursescheduling.domain.solver.MovableStudentEntitySelectionFilter</filterClass>
             </entitySelector>
         </changeMoveSelector>
         <acceptor>

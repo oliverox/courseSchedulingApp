@@ -3,8 +3,9 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.coursescheduling.domain.solver.StudentDifficultyComparator;
 import org.coursescheduling.domain.solver.CourseStrengthComparator;
+import org.coursescheduling.domain.solver.MovableStudentEntitySelectionFilter;
 
-@PlanningEntity(difficultyComparatorClass = StudentDifficultyComparator.class)
+@PlanningEntity(difficultyComparatorClass = StudentDifficultyComparator.class, movableEntitySelectionFilter = MovableStudentEntitySelectionFilter.class)
 public class StudentEntity {
 	private int id;
 	private int studentId;
@@ -14,6 +15,7 @@ public class StudentEntity {
 	private String nextYearAcademy;
 	private String requestedCourseId;
 	private Integer priority;
+	private Boolean locked;
 	// Planning variables: changes during planning, between score calculations.
 	private CourseEntity assignedCourse;
 
@@ -84,6 +86,14 @@ public class StudentEntity {
 
 	public Integer getPriority() {
 		return priority;
+	}
+
+	public void setLocked(Boolean locked) {
+		this.locked = locked;
+	}
+
+	public Boolean getLocked() {
+		return locked;
 	}
 
 	@PlanningVariable(valueRangeProviderRefs = {"courseRange"}, strengthComparatorClass = CourseStrengthComparator.class)

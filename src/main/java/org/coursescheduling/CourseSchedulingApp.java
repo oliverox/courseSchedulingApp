@@ -153,6 +153,7 @@ public class CourseSchedulingApp {
 		solution.setId(0L);
 		solution.setCourseList(getCourseListFromJson());
 		solution.setStudentList(getStudentListFromJson());
+		solution.doInitialStudentAssignment();
 		return solution;
 	}
 
@@ -178,10 +179,12 @@ public class CourseSchedulingApp {
 		for (CourseEntity course : solution.getCourseList()) {
 			output = output + "," + course.getId() + " - " + course.getCourseId() + "--" + course.getIndex();
 			for (StudentEntity student : solution.getStudentList()) {
-				if (student.getAssignedCourse().getId() == course.getId()) {
-					course.addStudent(student);
-					if (course.getStudents().size() > maxSize) {
-						maxSize = course.getStudents().size();
+				if (student.getAssignedCourse() != null) {
+					if (student.getAssignedCourse().getId() == course.getId()) {
+						course.addStudent(student);
+						if (course.getStudents().size() > maxSize) {
+							maxSize = course.getStudents().size();
+						}
 					}
 				}
 			}
@@ -242,11 +245,13 @@ public class CourseSchedulingApp {
 				for (StudentEntity currentStudent : studentList) {
 					if (currentStudent.getStudentId() == student.getStudentId()) {
 						coursesRequested.add(currentStudent.getRequestedCourseId());
-						if (courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] != "") {
-							courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] = courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] + " | " + currentStudent.getAssignedCourse().getCourseId() + "--" + currentStudent.getAssignedCourse().getIndex();
-						}
-						else {
-							courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] = currentStudent.getAssignedCourse().getCourseId() + "--" + currentStudent.getAssignedCourse().getIndex();
+						if (currentStudent.getAssignedCourse() != null) {
+							if (courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] != "") {
+								courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] = courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] + " | " + currentStudent.getAssignedCourse().getCourseId() + "--" + currentStudent.getAssignedCourse().getIndex();
+							}
+							else {
+								courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] = currentStudent.getAssignedCourse().getCourseId() + "--" + currentStudent.getAssignedCourse().getIndex();
+							}
 						}
 					}
 				}

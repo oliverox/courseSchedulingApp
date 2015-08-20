@@ -8,6 +8,7 @@ public class CourseEntity {
 	private int index;
 	private int period;
 	private String cycleDays;
+	private String markingPeriods;
 	private String courseName;
 	private String staffName;
 	private int staffId;
@@ -50,6 +51,14 @@ public class CourseEntity {
 
 	public void setCycleDays(String cycleDays) {
 		this.cycleDays = cycleDays;
+	}
+
+	public String getMarkingPeriods() {
+		return markingPeriods;
+	}
+
+	public void setMarkingPeriods(String markingPeriods) {
+		this.markingPeriods = markingPeriods;
 	}
 
 	public void setCourseName(String courseName) {
