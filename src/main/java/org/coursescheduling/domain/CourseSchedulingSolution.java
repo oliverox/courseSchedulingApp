@@ -62,25 +62,37 @@ public class CourseSchedulingSolution implements Solution<HardSoftScore>, Serial
 		this.studentList = studentList;
 	}
 
+	public void initializeCourseSemesters() {
+		for (CourseEntity course : courseList) {
+			if (course.getMarkingPeriods().contains("M1")) {
+				course.setSemester1(true);
+			}
+			else {
+				course.setSemester1(false);
+			}
+			if (course.getMarkingPeriods().contains("M3")) {
+				course.setSemester2(true);
+			}
+			else {
+				course.setSemester2(false);
+			}
+
+		}
+	}
+
 	public void doInitialStudentAssignment() {
 		for (StudentEntity student : studentList) {
 			if (student.getAssignedCourse() == null) {
 				CourseEntity courseToAssign = null;
-				int numOfPossibleCoursesToAssign = 0;
 				for (CourseEntity course : courseList) {
-					if (student.getRequestedCourseId().equals(course.getCourseId())) {
+					if (course.getCourseId().contains(student.getRequestedCourseId()) && (course.getCapacity() > 0)) {
 						courseToAssign = course;
-						numOfPossibleCoursesToAssign = numOfPossibleCoursesToAssign + 1;
+						break;
 					}
 				}
-				if (numOfPossibleCoursesToAssign == 1) {
-					student.setAssignedCourse(courseToAssign);
-					student.setLocked(true);
-					System.out.println("Assigned: " + student.toString());
-				}
-				else {
-					student.setLocked(false);
-				}
+				student.setAssignedCourse(courseToAssign);
+				student.setLocked(false);
+				System.out.println("Assigned: " + student.toString());
 			}
 		}
 	}

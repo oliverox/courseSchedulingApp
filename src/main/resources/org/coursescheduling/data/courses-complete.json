@@ -270,7 +270,7 @@
 {"id":270,"courseId":"6050","index":3,"period":6,"cycleDays":"TWF","markingPeriods":"M1 M2 M3 M4","courseName":"Ceramics","staffName":"Leinenbach C","staffId":4403,"room":"608","capacity":35,"academy":""},
 {"id":271,"courseId":"9251","index":3,"period":7,"cycleDays":"MTRF","markingPeriods":"M1 M2 M3 M4","courseName":"Advisory BATA 11","staffName":"Leinenbach C","staffId":4403,"room":"608","capacity":35,"academy":"Business and Technology Academy"},
 {"id":272,"courseId":"5486","index":4,"period":1,"cycleDays":"MWR","markingPeriods":"M1 M2 M3 M4","courseName":"ROP Perspectives in Education","staffName":"Lemon, Karen","staffId":560,"room":"D05","capacity":35,"academy":"ECHO Leadership Academy"},
-{"id":273,"courseId":"4600-Z ","index":1,"period":0,"cycleDays":"TWR","markingPeriods":"M1 M2 M3 M4","courseName":"Physical Education 2","staffName":"Lewen N","staffId":4407,"room":"GYM","capacity":50,"academy":""},
+{"id":273,"courseId":"4600-Z","index":1,"period":0,"cycleDays":"TWR","markingPeriods":"M1 M2 M3 M4","courseName":"Physical Education 2","staffName":"Lewen N","staffId":4407,"room":"GYM","capacity":50,"academy":""},
 {"id":274,"courseId":"4500","index":1,"period":1,"cycleDays":"MWR","markingPeriods":"M1 M2 M3 M4","courseName":"Physical Education 1","staffName":"Lewen N","staffId":4407,"room":"GYM","capacity":45,"academy":""},
 {"id":275,"courseId":"4600","index":3,"period":2,"cycleDays":"TWF","markingPeriods":"M1 M2 M3 M4","courseName":"Physical Education 2","staffName":"Lewen N","staffId":4407,"room":"GYM","capacity":45,"academy":""},
 {"id":276,"courseId":"4500","index":7,"period":3,"cycleDays":"MWR","markingPeriods":"M1 M2 M3 M4","courseName":"Physical Education 1","staffName":"Lewen N","staffId":4407,"room":"GYM","capacity":45,"academy":""},

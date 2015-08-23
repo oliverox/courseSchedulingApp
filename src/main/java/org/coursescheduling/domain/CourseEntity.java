@@ -16,6 +16,8 @@ public class CourseEntity {
 	private String academy;
 	private int capacity;
 	private int capacityUsed;
+	private boolean semester1;
+	private boolean semester2;
 	private ArrayList<StudentEntity> students;
 
 	public CourseEntity() {
@@ -59,6 +61,22 @@ public class CourseEntity {
 
 	public void setMarkingPeriods(String markingPeriods) {
 		this.markingPeriods = markingPeriods;
+	}
+
+	public void setSemester1(Boolean semester1) {
+		this.semester1 = semester1;
+	}
+
+	public void setSemester2(Boolean semester2) {
+		this.semester2 = semester2;
+	}
+
+	public boolean isAvailableSemester1() {
+		return semester1;
+	}
+
+	public boolean isAvailableSemester2() {
+		return semester2;
 	}
 
 	public void setCourseName(String courseName) {
@@ -144,9 +162,18 @@ public class CourseEntity {
 		return match;
 	}
 
+	public boolean semesterMatch(CourseEntity otherCourse) {
+		if ((isAvailableSemester1() == otherCourse.isAvailableSemester1()) || (isAvailableSemester2() == otherCourse.isAvailableSemester2())) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	@Override
 	public String toString() {
-		return "Course: [" + id + ", " + courseId + "--" + index + ", " + courseName + ", period: " + period + ", cycleDays: " + cycleDays + ", staffName: " + staffName + ", capacity: " + capacity + ", academy: " + academy + "]";
+		return "Course: [" + id + ", " + courseId + "--" + index + ", " + courseName + ", period: " + period + ", markingPeriods: " + markingPeriods + ", semester1: " + semester1 + ", semester2: " + semester2 + ", cycleDays: " + cycleDays + ", staffName: " + staffName + ", capacity: " + capacity + ", academy: " + academy + "]";
 	}
 
 }

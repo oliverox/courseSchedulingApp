@@ -5,7 +5,7 @@ import org.coursescheduling.domain.solver.StudentDifficultyComparator;
 import org.coursescheduling.domain.solver.CourseStrengthComparator;
 import org.coursescheduling.domain.solver.MovableStudentEntitySelectionFilter;
 
-@PlanningEntity(difficultyComparatorClass = StudentDifficultyComparator.class, movableEntitySelectionFilter = MovableStudentEntitySelectionFilter.class)
+@PlanningEntity(difficultyComparatorClass = StudentDifficultyComparator.class) //, movableEntitySelectionFilter = MovableStudentEntitySelectionFilter.class)
 public class StudentEntity {
 	private int id;
 	private int studentId;

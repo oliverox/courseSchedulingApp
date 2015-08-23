@@ -15,27 +15,52 @@
 
 <!-- Configure the optimization algorithm(s) -->
     <termination>
-        <minutesSpentLimit>2</minutesSpentLimit>
+        <secondsSpentLimit>5700</secondsSpentLimit>
         <!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
     </termination>
     <constructionHeuristic>
         <!-- <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType> -->
         <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+        <!-- <constructionHeuristicType>ALLOCATE_ENTITY_FROM_QUEUE</constructionHeuristicType> -->
+        <!-- <constructionHeuristicType>ALLOCATE_FROM_POOL</constructionHeuristicType> -->
     </constructionHeuristic>
     <localSearch>
-        <changeMoveSelector>
-            <entitySelector>
-                <cacheType>PHASE</cacheType>
-                <selectionOrder>SORTED</selectionOrder>
-                <sorterManner>DECREASING_DIFFICULTY</sorterManner>
-                <filterClass>org.coursescheduling.domain.solver.MovableStudentEntitySelectionFilter</filterClass>
-            </entitySelector>
-        </changeMoveSelector>
+        <!-- <unionMoveSelector> -->
+            <changeMoveSelector>
+                <entitySelector>
+                    <cacheType>PHASE</cacheType>
+                    <selectionOrder>SORTED</selectionOrder>
+                    <sorterComparatorClass>org.coursescheduling.domain.solver.StudentDifficultyComparator</sorterComparatorClass>
+                    <sorterOrder>DESCENDING</sorterOrder>
+                    <!-- <sorterManner>DECREASING_DIFFICULTY</sorterManner> -->
+                    <!-- <filterClass>org.coursescheduling.domain.solver.MovableStudentEntitySelectionFilter</filterClass> -->
+                </entitySelector>
+            </changeMoveSelector>
+            <!-- <swapMoveSelector/> -->
+        <!-- </unionMoveSelector> -->
+
+        <!-- <acceptor> -->
+            <!-- <simulatedAnnealingStartingTemperature>2hard/10soft</simulatedAnnealingStartingTemperature> -->
+        <!-- </acceptor> -->
+        <!-- <forager> -->
+            <!-- <acceptedCountLimit>1</acceptedCountLimit> -->
+        <!-- </forager> -->
+
+        <!-- <acceptor> -->
+            <!-- <lateAcceptanceSize>400</lateAcceptanceSize> -->
+        <!-- </acceptor> -->
+        <!-- <forager> -->
+            <!-- <acceptedCountLimit>1</acceptedCountLimit> -->
+        <!-- </forager> -->
+
         <acceptor>
-            <entityTabuSize>7</entityTabuSize>
+            <entityTabuRatio>0.05</entityTabuRatio>
+            <!-- <moveTabuSize>100</moveTabuSize> -->
+            <!-- <undoMoveTabuSize>7</undoMoveTabuSize> -->
+            <!-- <entityTabuSize>7</entityTabuSize> -->
         </acceptor>
         <forager>
-            <acceptedCountLimit>1000</acceptedCountLimit>
+            <acceptedCountLimit>1500</acceptedCountLimit>
         </forager>
     </localSearch>
 </solver>

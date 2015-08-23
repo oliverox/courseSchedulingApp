@@ -32,6 +32,11 @@ public class CourseSchedulingApp {
 	public static final int CW = 20;
 	public static ScoreDirector scoreDirector;
 
+	public static ArrayList<StudentEntity> placeIntoCourseBySubjectRequestedArray = new ArrayList<StudentEntity>();
+	public static ArrayList<CourseEntity> dontExceedCourseMaxCapacityArray = new ArrayList<CourseEntity>();
+	public static ArrayList<StudentEntity> dontPlaceIntoCoursesAtTheSamePeriodsArray = new ArrayList<StudentEntity>();
+
+
 	public static String spacer(String word, int length) {
 		int wl = word.length();
 		if (wl < length) {
@@ -110,6 +115,8 @@ public class CourseSchedulingApp {
 			System.out.println("\n**** Listing students by courses ****");
 			listStudentsByCourses(solvedSolution);
 
+			printReport(solvedSolution);
+
 		} catch (IOException ex) {
 			Logger.getLogger(CourseSchedulingApp.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (URISyntaxException ex) {
@@ -137,9 +144,9 @@ public class CourseSchedulingApp {
         try {
 			Gson gson = new Gson();
 			Type collectionType = new TypeToken<ArrayList<StudentEntity>>(){}.getType();
-			studentlist = gson.fromJson(readFile("/org/coursescheduling/data/students-complete.json"), collectionType);
+			studentlist = gson.fromJson(readFile("/org/coursescheduling/data/students-complete_orig.json"), collectionType);
 			for (StudentEntity student : studentlist) {
-				System.out.println("+++++++++ " + student.toString() + "\n");
+				System.out.println("+++++++++ " + student.toString());
 			}
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CourseSchedulingApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,6 +159,7 @@ public class CourseSchedulingApp {
 		CourseSchedulingSolution solution = new CourseSchedulingSolution();
 		solution.setId(0L);
 		solution.setCourseList(getCourseListFromJson());
+		solution.initializeCourseSemesters();
 		solution.setStudentList(getStudentListFromJson());
 		solution.doInitialStudentAssignment();
 		return solution;
@@ -164,6 +172,21 @@ public class CourseSchedulingApp {
             }
         }
 		return false;
+	}
+
+	private static void printReport(CourseSchedulingSolution solution) {
+		System.out.println("\n\n====================== REPORT ======================");
+		System.out.println("BEST SCORE: " + solution.getScore() + "\n");
+		System.out.println("Rule: place into course by subject requested");
+		System.out.println("Broken: " + placeIntoCourseBySubjectRequestedArray.size());
+		System.out.println(placeIntoCourseBySubjectRequestedArray.toString());
+		System.out.println("\nRule: don't exceed course max capacity");
+		System.out.println("Broken: " + dontExceedCourseMaxCapacityArray.size());
+		System.out.println(dontExceedCourseMaxCapacityArray.toString());
+		System.out.println("\nRule: don't place into courses at the same periods");
+		System.out.println("Broken: " + dontPlaceIntoCoursesAtTheSamePeriodsArray.size());
+		System.out.println(dontPlaceIntoCoursesAtTheSamePeriodsArray.toString());
+		System.out.println("========================= END ========================");
 	}
 
 	private static void listStudentsByCourses(CourseSchedulingSolution solution) throws IOException, URISyntaxException {
@@ -182,6 +205,9 @@ public class CourseSchedulingApp {
 				if (student.getAssignedCourse() != null) {
 					if (student.getAssignedCourse().getId() == course.getId()) {
 						course.addStudent(student);
+						if (course.getStudents().size() > course.getCapacity()) {
+							dontExceedCourseMaxCapacityArray.add(course);
+						}
 						if (course.getStudents().size() > maxSize) {
 							maxSize = course.getStudents().size();
 						}
@@ -208,6 +234,7 @@ public class CourseSchedulingApp {
 		System.out.println("\nStudents by courses csv " + CourseSchedulingApp.class.getResource("/org/coursescheduling/data/studentsbycourses.csv").toURI());
 		printWriter.flush();
 		printWriter.close();
+
 	}
 
 	private static void listStudentsByPeriod(CourseSchedulingSolution solution) throws URISyntaxException, IOException {
@@ -233,25 +260,35 @@ public class CourseSchedulingApp {
 		System.out.println(output);
 		printWriter.println(output);
 
-		String[] courseAtPeriod;
 		ArrayList<String> studentsProcessed = new ArrayList<String>();
 		List<StudentEntity> studentList = solution.getStudentList();
 
 		for (StudentEntity student : studentList) {
+			if (!student.getRequestedCourseId().equals(student.getAssignedCourse().getCourseId())) {
+				placeIntoCourseBySubjectRequestedArray.add(student);
+			}
 			if (!arrContains(studentsProcessed, Integer.toString(student.getStudentId()))) {
 				studentsProcessed.add(Integer.toString(student.getStudentId()));
-				courseAtPeriod = new String[] {"","","","","","","","","",""};
+				ArrayList<ArrayList<CourseEntity>> courseAtPeriod = new ArrayList<ArrayList<CourseEntity>>();
+
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 0
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 1
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 2
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 3
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 4
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 5
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 6
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 7
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 8
+				courseAtPeriod.add(new ArrayList<CourseEntity>()); // period 9
 				ArrayList<String> coursesRequested = new ArrayList<String>();
 				for (StudentEntity currentStudent : studentList) {
 					if (currentStudent.getStudentId() == student.getStudentId()) {
 						coursesRequested.add(currentStudent.getRequestedCourseId());
 						if (currentStudent.getAssignedCourse() != null) {
-							if (courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] != "") {
-								courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] = courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] + " | " + currentStudent.getAssignedCourse().getCourseId() + "--" + currentStudent.getAssignedCourse().getIndex();
-							}
-							else {
-								courseAtPeriod[currentStudent.getAssignedCourse().getPeriod()] = currentStudent.getAssignedCourse().getCourseId() + "--" + currentStudent.getAssignedCourse().getIndex();
-							}
+							// System.out.println("\n\n**********************\nFor student: " + currentStudent.toString());
+							// System.out.println("adding " + currentStudent.getAssignedCourse().toString() + " to period " + currentStudent.getAssignedCourse().getPeriod());
+							courseAtPeriod.get(currentStudent.getAssignedCourse().getPeriod()).add(currentStudent.getAssignedCourse());
 						}
 					}
 				}
@@ -260,19 +297,47 @@ public class CourseSchedulingApp {
 				for (String value : coursesRequested) {
     				coursesRequestedStr.append(value + "|");
 				}
-				output = 	Integer.toString(student.getStudentId()) + ", " +
-							student.getLastName() + " " + student.getFirstName() + ", " +
-							courseAtPeriod[0] + ", " +
-							courseAtPeriod[1] + ", " +
-							courseAtPeriod[2] + ", " +
-							courseAtPeriod[3] + ", " +
-							courseAtPeriod[4] + ", " +
-							courseAtPeriod[5] + ", " +
-							courseAtPeriod[6] + ", " +
-							courseAtPeriod[7] + ", " +
-							courseAtPeriod[8] + ", " +
-							courseAtPeriod[9] + ", " +
-							coursesRequestedStr.toString();
+				output = Integer.toString(student.getStudentId()) + ", " + student.getLastName() + " " + student.getFirstName() + ", ";
+				for (int i=0; i<courseAtPeriod.size(); i++) {
+					// System.out.println("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\nCourses at period " + i);
+					if (courseAtPeriod.get(i).size() == 0) {
+						output = output + ", ";
+					}
+					else {
+						// System.out.println(courseAtPeriod.get(i).toString());
+						if (courseAtPeriod.get(i).size() > 1) {
+							// potential period conflict if semesters match
+							for (int j=0; j<courseAtPeriod.get(i).size(); j++) {
+								for (int k=0; k<courseAtPeriod.get(i).size(); k++) {
+									if (k > j) {
+										// System.out.println("\n^^^^^^^^ Comparing: \n" + courseAtPeriod.get(i).get(j).toString() + "\n" + courseAtPeriod.get(i).get(k).toString());
+										if (courseAtPeriod.get(i).get(j).semesterMatch(courseAtPeriod.get(i).get(k))) {
+											for (StudentEntity s1 : studentList) {
+												if ((s1.getStudentId() == student.getStudentId()) && (s1.getAssignedCourse().getId() == courseAtPeriod.get(i).get(j).getId())) {
+													// System.out.println("CONFLICT!! Adding student: " + student.toString());
+													dontPlaceIntoCoursesAtTheSamePeriodsArray.add(s1);
+												}
+												if ((s1.getStudentId() == student.getStudentId()) && (s1.getAssignedCourse().getId() == courseAtPeriod.get(i).get(k).getId())) {
+													// System.out.println("CONFLICT!! Adding student: " + student.toString());
+													dontPlaceIntoCoursesAtTheSamePeriodsArray.add(s1);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						for (int j=0; j<courseAtPeriod.get(i).size(); j++) {
+							if (j == courseAtPeriod.get(i).size() - 1) {
+								output = output + courseAtPeriod.get(i).get(j).getCourseId() + "--" + courseAtPeriod.get(i).get(j).getIndex() + ", ";
+							}
+							else {
+								output = output + courseAtPeriod.get(i).get(j).getCourseId() + "--" + courseAtPeriod.get(i).get(j).getIndex() + " | ";
+							}
+						}
+					}
+				}
+				output = output + coursesRequestedStr.toString();
 				System.out.println(output);
 				printWriter.println(output);
 			}
@@ -281,6 +346,7 @@ public class CourseSchedulingApp {
 		printWriter.flush();
 		printWriter.close();
 	}
+
 
 	private static String toDisplayString(CourseSchedulingSolution solution) {
 		String output = spacer("id", CW) +
