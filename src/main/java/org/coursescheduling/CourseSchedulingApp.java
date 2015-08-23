@@ -332,7 +332,18 @@ public class CourseSchedulingApp {
 								output = output + courseAtPeriod.get(i).get(j).getCourseId() + "--" + courseAtPeriod.get(i).get(j).getIndex() + ", ";
 							}
 							else {
-								output = output + courseAtPeriod.get(i).get(j).getCourseId() + "--" + courseAtPeriod.get(i).get(j).getIndex() + " | ";
+								Boolean conflict = false;
+								if (j < courseAtPeriod.get(i).size()) {
+									if (courseAtPeriod.get(i).get(j).semesterMatch(courseAtPeriod.get(i).get(j+1))) {
+										conflict = true;
+									}
+								}
+								if (conflict) {
+									output = output + courseAtPeriod.get(i).get(j).getCourseId() + "--" + courseAtPeriod.get(i).get(j).getIndex() + " / ";
+								}
+								else {
+									output = output + courseAtPeriod.get(i).get(j).getCourseId() + "--" + courseAtPeriod.get(i).get(j).getIndex() + " | ";
+								}
 							}
 						}
 					}
