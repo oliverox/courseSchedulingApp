@@ -161,7 +161,7 @@ public class CourseSchedulingApp {
 		solution.setCourseList(getCourseListFromJson());
 		solution.initializeCourseSemesters();
 		solution.setStudentList(getStudentListFromJson());
-		solution.doInitialStudentAssignment();
+		// solution.doInitialStudentAssignment();
 		return solution;
 	}
 

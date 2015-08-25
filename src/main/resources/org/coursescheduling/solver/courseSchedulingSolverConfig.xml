@@ -15,7 +15,7 @@
 
 <!-- Configure the optimization algorithm(s) -->
     <termination>
-        <secondsSpentLimit>10</secondsSpentLimit>
+        <secondsSpentLimit>21600</secondsSpentLimit>
         <!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
     </termination>
     <constructionHeuristic>
@@ -27,14 +27,9 @@
     <localSearch>
         <!-- <unionMoveSelector> -->
             <changeMoveSelector>
-                <entitySelector>
-                    <cacheType>PHASE</cacheType>
-                    <selectionOrder>SORTED</selectionOrder>
-                    <sorterComparatorClass>org.coursescheduling.domain.solver.StudentDifficultyComparator</sorterComparatorClass>
-                    <sorterOrder>DESCENDING</sorterOrder>
-                    <!-- <sorterManner>DECREASING_DIFFICULTY</sorterManner> -->
-                    <!-- <filterClass>org.coursescheduling.domain.solver.MovableStudentEntitySelectionFilter</filterClass> -->
-                </entitySelector>
+                <cacheType>JUST_IN_TIME</cacheType>
+                <selectionOrder>RANDOM</selectionOrder>
+                <filterClass>org.coursescheduling.domain.solver.MoveFilter</filterClass>
             </changeMoveSelector>
             <!-- <swapMoveSelector/> -->
         <!-- </unionMoveSelector> -->
@@ -54,13 +49,13 @@
         <!-- </forager> -->
 
         <acceptor>
-            <entityTabuRatio>0.2</entityTabuRatio>
+            <entityTabuRatio>0.7</entityTabuRatio>
             <!-- <moveTabuSize>100</moveTabuSize> -->
             <!-- <undoMoveTabuSize>7</undoMoveTabuSize> -->
             <!-- <entityTabuSize>7</entityTabuSize> -->
         </acceptor>
         <forager>
-            <acceptedCountLimit>10000</acceptedCountLimit>
+            <acceptedCountLimit>10200</acceptedCountLimit>
         </forager>
     </localSearch>
 </solver>
